@@ -1,6 +1,9 @@
 // Falso banco de dados de clientes, em memória RAM
 var clientes = []
 
+//guarda o cliente que está sendo alterado
+var clienteAlterado = null
+
 function mostrarModal(){
     const modal = document.getElementById("modal")
     modal.style.display = "block"
@@ -12,11 +15,28 @@ function ocultarModal(){
 }
 
 function adicionar(){
+    clienteAlterado = null // marca que está adicionando um cliente
+    limparFormulario() 
     mostrarModal()
 }
 
-function alterar(){
-    mostrarModal()
+function alterar(cpf){
+    //busca o cliente que será alterado
+    for(let i=0; i < clientes.length; i++){
+        let cliente = clientes[i]
+        if (cliente.cpf == cpf){
+            document.getElementById("nome").value = cliente.nome
+            document.getElementById("cpf").value = cliente.cpf
+            document.getElementById("peso").value = cliente.peso
+            document.getElementById("altura").value = cliente.altura
+            document.getElementById("dataNascimento").value = cliente.dataNascimento
+            document.getElementById("sapato").value = cliente.sapato
+            clienteAlterado = cliente //guarda o cliente que está sendo alterado
+            mostrarModal()
+        }
+    }
+
+    
 }
 
 function excluir(cpf){
@@ -41,19 +61,31 @@ function salvar(){
     let peso = document.getElementById("peso").value
     let altura = document.getElementById("altura").value
     let dataNascimento = document.getElementById("dataNascimento").value
+    let sapato = document.getElementById("sapato").value
 
     let novoBodyBuilder = {
         nome: nome,
         cpf: cpf,
         peso: peso,
         altura: altura,
-        dataNascimento: dataNascimento
+        dataNascimento: dataNascimento,
+        sapato: sapato
     }
 
-    //adiciona um bodyBuilder na lista de clientes
-    clientes.push(novoBodyBuilder)
-
-    alert("Cadastrado com sucesso")
+    //se clienteAlterado == null, então está adicionando um novo cliente
+    if (clienteAlterado == null){
+        //adiciona um bodyBuilder na lista de clientes
+        clientes.push(novoBodyBuilder)
+        alert("Cadastrado com sucesso")
+    }else{ //senao está alterando um cliente
+        clienteAlterado.nome = nome
+        clienteAlterado.peso = peso
+        clienteAlterado.altura = altura
+        clienteAlterado.dataNascimento = dataNascimento
+        clienteAlterado.sapato = sapato
+        alert("Alterado com sucesso")
+    }
+    
     ocultarModal()
 
     limparFormulario()
@@ -68,6 +100,7 @@ function limparFormulario(){
     document.getElementById("peso").value = ""
     document.getElementById("altura").value = ""
     document.getElementById("dataNascimento").value = ""
+    document.getElementById("sapato").value = ""
 }
 
 function atualizarLista(){
@@ -83,8 +116,9 @@ function atualizarLista(){
             <td>${cliente.peso}kg</td>
             <td>${cliente.altura}m</td>
             <td>${cliente.dataNascimento}</td>
+            <td>${cliente.sapato}</td>
             <td>
-                <button onclick="alterar()">Alterar</button>
+                <button onclick="alterar('${cliente.cpf}')">Alterar</button>
                 <button onclick="excluir('${cliente.cpf}')">Excluir</button>
             </td>`
         
