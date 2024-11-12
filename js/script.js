@@ -74,9 +74,18 @@ function salvar(){
 
     //se clienteAlterado == null, então está adicionando um novo cliente
     if (clienteAlterado == null){
-        //adiciona um bodyBuilder na lista de clientes
-        clientes.push(novoBodyBuilder)
-        alert("Cadastrado com sucesso")
+        fetch('http://localhost:3000/body-builder', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            mode: 'cors',
+            body: JSON.stringify(novoBodyBuilder)
+        }).then(() => {
+            alert("Cadastrado com sucesso")
+        }).catch((error) => {
+            alert("Erro ao cadastrar")
+        })
     }else{ //senao está alterando um cliente
         clienteAlterado.nome = nome
         clienteAlterado.peso = peso
