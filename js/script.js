@@ -41,17 +41,18 @@ function alterar(cpf){
 
 function excluir(cpf){
     if (confirm("Deseja realmente excluir este body builder?")){
-        //busca o cliente pelo cpf e exclui-o se encontrar
-        for(let i = 0; i < clientes.length; i++){
-            let cliente = clientes[i]
-            if (cliente.cpf == cpf){
-                clientes.splice(i, 1)
-                alert("Excluído com sucesso")
-                atualizarLista()
-            }
-        }
-
-        
+        fetch('http://localhost:3000/body-builder/' + cpf, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            mode: 'cors'
+        }).then(() => {
+            alert("Excluído com sucesso")
+            carregarClientes()
+        }).catch((error) => {
+            alert("Erro ao cadastrar")
+        })
     }
 }
 
@@ -87,19 +88,25 @@ function salvar(){
             alert("Erro ao cadastrar")
         })
     }else{ //senao está alterando um cliente
-        clienteAlterado.nome = nome
-        clienteAlterado.peso = peso
-        clienteAlterado.altura = altura
-        clienteAlterado.dataNascimento = dataNascimento
-        clienteAlterado.sapato = sapato
-        alert("Alterado com sucesso")
+        fetch('http://localhost:3000/body-builder/' + clienteAlterado.cpf, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            mode: 'cors',
+            body: JSON.stringify(novoBodyBuilder)
+        }).then(() => {
+            alert("Alterado com sucesso")
+        }).catch((error) => {
+            alert("Erro ao alterar")
+        })
     }
     
     ocultarModal()
 
     limparFormulario()
 
-    atualizarLista()
+    carregarClientes()
     return false
 }
 
@@ -133,4 +140,22 @@ function atualizarLista(){
         
         tbody.appendChild(linhaTabela)
     }
+}
+
+function carregarClientes(){
+    fetch('http://localhost:3000/body-builder', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        mode: 'cors'
+    }).then((response) => response.json())
+    .then((data) => {
+        // console.log(data)
+        clientes = data //recebe a lista de clientes do back
+        atualizarLista()
+    }).catch((error) => {
+        console.log(error)
+        alert("Erro ao listar clientes")
+    })
 }
