@@ -9,6 +9,9 @@
 </head>
 <body onload="carregarClientes()">
     <h1>Body Builders</h1>
+    <form name="form-busca" id="form-busca" onsubmit="return false">
+        <input type="search" name="busca" id="busca" onkeyup="carregarClientes()" />
+    </form>
     <button onclick="adicionar()">Adicionar</button>
     <table>
         <thead>

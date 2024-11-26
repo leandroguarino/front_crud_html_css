@@ -143,7 +143,8 @@ function atualizarLista(){
 }
 
 function carregarClientes(){
-    fetch('http://localhost:3000/body-builder', {
+    let busca = document.getElementById("busca").value
+    fetch('http://localhost:3000/body-builder?busca=' + busca, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
