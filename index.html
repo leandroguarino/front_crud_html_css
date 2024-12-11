@@ -7,7 +7,7 @@
     <script src="js/script.js"></script>
     <link href="css/style.css" rel="stylesheet" />
 </head>
-<body onload="carregarClientes()">
+<body onload="carregarClientes(); carregarAcademias();">
     <h1>Body Builders</h1>
     <form name="form-busca" id="form-busca" onsubmit="return false">
         <input type="search" name="busca" id="busca" onkeyup="carregarClientes()" />
@@ -16,6 +16,7 @@
     <table>
         <thead>
             <tr>
+                <th>Academia</th>
                 <th>CPF</th>
                 <th>Nome</th>
                 <th>Peso</th>
@@ -56,6 +57,12 @@
             <div class="form-group">
                 <label>Tamanho do Sapato</label>
                 <input type="number" name="sapato" id="sapato" />
+            </div>
+            <div class="form-group">
+                <label>Academia</label>
+                <select id="academia">
+                    
+                </select>
             </div>
             <div class="form-group">
                 <input type="submit" name="enviar" value="Salvar" />

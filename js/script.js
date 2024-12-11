@@ -1,6 +1,8 @@
 // Falso banco de dados de clientes, em memória RAM
 var clientes = []
 
+var academias = []
+
 //guarda o cliente que está sendo alterado
 var clienteAlterado = null
 
@@ -31,6 +33,7 @@ function alterar(cpf){
             document.getElementById("altura").value = cliente.altura
             document.getElementById("dataNascimento").value = cliente.dataNascimento
             document.getElementById("sapato").value = cliente.sapato
+            document.getElementById("academia").value = cliente.gym.id
             clienteAlterado = cliente //guarda o cliente que está sendo alterado
             mostrarModal()
         }
@@ -63,6 +66,7 @@ function salvar(){
     let altura = document.getElementById("altura").value
     let dataNascimento = document.getElementById("dataNascimento").value
     let sapato = document.getElementById("sapato").value
+    let idAcademia = document.getElementById("academia").value
 
     let novoBodyBuilder = {
         nome: nome,
@@ -70,7 +74,8 @@ function salvar(){
         peso: peso,
         altura: altura,
         dataNascimento: dataNascimento,
-        sapato: sapato
+        sapato: sapato,
+        idAcademia: idAcademia
     }
 
     //se clienteAlterado == null, então está adicionando um novo cliente
@@ -127,6 +132,7 @@ function atualizarLista(){
         
         let linhaTabela = document.createElement("tr")
         linhaTabela.innerHTML = `
+            <td>${cliente.gym.nome}</td>
             <td>${cliente.cpf}</td>
             <td>${cliente.nome}</td>
             <td>${cliente.peso}kg</td>
@@ -159,4 +165,33 @@ function carregarClientes(){
         console.log(error)
         alert("Erro ao listar clientes")
     })
+}
+
+function carregarAcademias(){
+    fetch('http://localhost:3000/gym', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        mode: 'cors'
+    }).then((response) => response.json())
+    .then((data) => {
+        // console.log(data)
+        academias = data //recebe a lista de clientes do back
+        atualizarListaAcademias()
+    }).catch((error) => {
+        console.log(error)
+        alert("Erro ao listar academias")
+    })
+}
+
+function atualizarListaAcademias(){
+    let listaAcademia = document.getElementById("academia")
+    for(let i = 0; i < academias.length; i++){
+        let academia = academias[i]
+        let option = document.createElement("option")
+        option.value = academia.id
+        option.innerHTML = academia.nome
+        listaAcademia.appendChild(option)
+    }
 }
